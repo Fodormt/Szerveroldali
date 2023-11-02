@@ -14,4 +14,8 @@ class Event extends Model
         'time',
         'time'
     ];
+
+    public function vehicles(): BelongsToMany {
+        return $this->belongsTo(Vehicle::class);
+    }
 }
