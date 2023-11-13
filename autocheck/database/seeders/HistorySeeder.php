@@ -7,11 +7,15 @@ use Illuminate\Database\Seeder;
 
 class HistorySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        $users = User::all();
+        $rand = array_rand($users);
+
+        History::factory()->create([
+            'location' => fake()->name,
+            'userid'=> $users[$rand],
+            'description' => fake()->text(),
+        ]);
     }
 }

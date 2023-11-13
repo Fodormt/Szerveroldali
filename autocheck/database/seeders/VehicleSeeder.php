@@ -12,6 +12,11 @@ class VehicleSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Vehichle::factory()->create([
+            'plate' => fake()->regexify('[a-zA-Z]{3}-?\d{3}'),
+            'brand' => fake()->word(),
+            'type' => fake()->word(),
+            'year'=> fake()->year()
+        ]);
     }
 }

@@ -12,6 +12,10 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Event::factory()->create([
+            'plate',
+            'user_id',
+            'description' => fake()->text(),
+        ]);
     }
 }

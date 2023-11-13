@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('plate');
             $table->string('brand');
             $table->string('type');
-            $table->int('year');
+            $table->integer('year');
             $table->string('filename')->nullable();
             $table->string('filename_hash')->nullable();
             $table->timestamps();

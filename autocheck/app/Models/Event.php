@@ -12,7 +12,7 @@ class Event extends Model
     protected $fillable = [
         'location',
         'time',
-        'time'
+        'description'
     ];
 
     public function vehicles(): BelongsToMany {
