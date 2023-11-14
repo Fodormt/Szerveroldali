@@ -17,7 +17,10 @@ class VehicleFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'plate' => fake()->regexify('[a-zA-Z]{3}-?\d{3}'),
+            'brand' => fake()->word(),
+            'type' => fake()->word(),
+            'year'=> fake()->year()
         ];
     }
 }

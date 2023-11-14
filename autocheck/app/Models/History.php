@@ -11,10 +11,11 @@ class History extends Model
 
     protected $fillable = [
         'plate',
-        'user_id'
+        //'user_id'
     ];
 
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
+    
 }

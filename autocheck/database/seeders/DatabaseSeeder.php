@@ -4,6 +4,12 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Database\Seeders\EventSeeder;
+use Database\Seeders\HistroySeeder;
+use Database\Seeders\VehicleSeeder;
+
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,7 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::factory(10)->create();
+        User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Admin',
@@ -24,7 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             EventSeeder::class,
             HistorySeeder::class,
-            VehichleSeeder::class,
+            VehicleSeeder::class,
         ]);
     }
 }

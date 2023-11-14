@@ -15,10 +15,10 @@ class Vehicle extends Model
         'type',
         'year',
         'filename',
-        'filename_hash'    
+        'filename_hash',
     ]; 
 
-    public function events(): BelongsToMany {
+    public function events(): HasMany {
         return $this->belongsTo(Event::class);
     }
 }

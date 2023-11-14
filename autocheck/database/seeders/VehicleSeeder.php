@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Vehicle;
 
 class VehicleSeeder extends Seeder
 {
@@ -12,11 +13,6 @@ class VehicleSeeder extends Seeder
      */
     public function run(): void
     {
-        Vehichle::factory()->create([
-            'plate' => fake()->regexify('[a-zA-Z]{3}-?\d{3}'),
-            'brand' => fake()->word(),
-            'type' => fake()->word(),
-            'year'=> fake()->year()
-        ]);
+        Vehicle::factory(10)->create();
     }
 }
