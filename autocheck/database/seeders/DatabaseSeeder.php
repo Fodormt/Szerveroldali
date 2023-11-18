@@ -20,12 +20,12 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Admin',
-        //     'email' => 'test@example.com',
-        //     'is_admin' => true,
-        //     'is_premium' => true,
-        // ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'a@a.hu',
+            'is_admin' => true,
+            'is_premium' => true,
+        ]);
 
         $this->call([
             EventSeeder::class,

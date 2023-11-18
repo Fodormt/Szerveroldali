@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Models\Vehicle;
+
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Event>
@@ -18,9 +20,9 @@ class EventFactory extends Factory
     public function definition(): array
     {
         return [
-            'location' => fake()->text(),
-            'time' => fake()->time(),
-            'description' => fake()->text(),
+            'location' => fake()->address(),
+            'time' => fake()->date(),
+            'description' => fake()->text(80),
         ];
     }
 }

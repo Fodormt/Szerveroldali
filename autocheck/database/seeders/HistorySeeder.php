@@ -11,6 +11,8 @@ class HistorySeeder extends Seeder
 {
     public function run(): void
     {
-        History::factory(10)->create(['user_id' => User::all()->random()->id]);
+        for ($i=0; $i < 20; $i++) { 
+            History::factory(1)->create(['user_id' => User::all()->random()->id]);
+        }
     }
 }

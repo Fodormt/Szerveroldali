@@ -15,6 +15,8 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
-        Event::factory(10)->create(['user_id' => User::all()->random()->id]);
+        for ($i=0; $i < 50; $i++) { 
+            Event::factory(1)->create(['user_id' => User::all()->random()->id, 'vehicles' => Vehicle::all()->random()->plate ]);
+        }
     }
 }

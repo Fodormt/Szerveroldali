@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
+use App\Models\Event;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +17,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware('auth')->group(function(){
+    Route::get('/', function () {
+        $events = Event::all();
+        return view('autocheck.search', ['events' => $events]);
+        // $history = Auth::user()->histories;
+        // return view('autocheck.history', ['histories' => $history]);
+    });
 });
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
