@@ -1,10 +1,10 @@
 <?php
 
 namespace Database\Seeders;
+
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Vehicle;
-
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,8 +15,11 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i=0; $i < 50; $i++) { 
-            Event::factory(1)->create(['user_id' => User::all()->random()->id, 'vehicles' => Vehicle::all()->random()->plate ]);
-        }
+        $events = Event::factory(10)->create();
+
+        $vehicles = Vehicle::all();
+        $events -> each(function ($e) use (&$vehicles) {
+            $e -> vehicles() -> attach($vehicles -> random(rand(2, $vehicles->count())));
+        });
     }
 }

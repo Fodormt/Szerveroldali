@@ -18,8 +18,8 @@ class Event extends Model
         'description',
     ];
 
-    public function vehicles(): BelongsTo {
-        return $this->belongsTo(Vehicle::class);
+    public function vehicles(): BelongsToMany {
+        return $this->belongsToMany(Vehicle::class);
     }
 
     public function users(): BelongsTo {

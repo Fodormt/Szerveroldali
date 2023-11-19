@@ -28,9 +28,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
+            VehicleSeeder::class,
             EventSeeder::class,
             HistorySeeder::class,
-            VehicleSeeder::class,
         ]);
     }
 }

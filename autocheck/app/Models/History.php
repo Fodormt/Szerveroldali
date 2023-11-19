@@ -12,7 +12,6 @@ class History extends Model
 
     protected $fillable = [
         'plate',
-        //'user_id'
     ];
 
     public function user(): BelongsTo
