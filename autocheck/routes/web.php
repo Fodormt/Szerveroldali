@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
@@ -17,16 +19,14 @@ use App\Models\Event;
 |
 */
 
-Route::middleware('auth')->group(function(){
-    Route::get('/', function () {
-        $events = Event::all();
-        return view('autocheck.search', ['events' => $events]);
-        // $history = Auth::user()->histories;
-        // return view('autocheck.history', ['histories' => $history]);
-    });
+
+Route::get('/', function () {
+    $events = Event::all();
+    return view('autocheck.search', ['events' => $events, 'user' => Auth::user()]);
 });
 
-
+Route::resource('events', EventController::class);
+Route::resource('vehicles', VehicleController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -38,4 +38,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

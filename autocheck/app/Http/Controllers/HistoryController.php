@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class EventController extends Controller
+class HistoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class EventController extends Controller
      */
     public function create()
     {
-        return view('autocheck.events_create');
+        //
     }
 
     /**
