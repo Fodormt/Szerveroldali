@@ -4,7 +4,7 @@
 
 @section('content')
     @foreach ($histories as $history)
-        <div class="events">
+        <div class="histories">
             <p>
                 <b>License plate:</b> {{ $history->plate }}
                 <b>User:</b> {{ $history->user->name }}

@@ -20,7 +20,7 @@ class VehicleFactory extends Factory
             'plate' => fake()->regexify('[a-zA-Z]{3}-?\d{3}'),
             'brand' => fake()->word(),
             'type' => fake()->word(),
-            'year'=> fake()->year()
+            'year'=> fake()->year('before:now'),
         ];
     }
 }

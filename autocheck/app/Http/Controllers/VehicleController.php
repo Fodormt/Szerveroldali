@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
 
 class VehicleController extends Controller
@@ -11,7 +12,7 @@ class VehicleController extends Controller
      */
     public function index()
     {
-        //
+        return view('autocheck.vehicles', ['vehicles' => Vehicle::all()]);
     }
 
     /**
@@ -27,7 +28,16 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request -> validate([
+            'plate' => 'required|string|regex:/^[a-zA-Z]{3}-?\d{3}/i|unique:vehicles,plate',
+            'brand' => 'required|string',
+            'type' => 'required|string',
+            'year' => 'required|date_format:Y|before:today',
+            'file' => 'required|file',
+        ]);
+
+        $vehicle = Vehicle::create($validated);
+        return redirect() -> route('vehicles.index');
     }
 
     /**
@@ -35,7 +45,8 @@ class VehicleController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // $vehicle = Vehicle::find($id);
+        // return view('autocheck.vehicles');
     }
 
     /**

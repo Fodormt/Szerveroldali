@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Auth;
@@ -25,12 +26,14 @@ Route::get('/', function () {
     return view('autocheck.search', ['events' => $events, 'user' => Auth::user()]);
 });
 
+Route::get('/dashboard', function () {
+    $events = Event::all();
+    return view('autocheck.search', ['events' => $events, 'user' => Auth::user()]);
+});
+
 Route::resource('events', EventController::class);
 Route::resource('vehicles', VehicleController::class);
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::resource('histories', HistoryController::class);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

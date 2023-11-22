@@ -70,6 +70,10 @@
             margin-right: 15px;
         }
 
+        .error{
+            color: red;
+        }
+
         /* Content styles */
         .content {
             max-width: 800px;
@@ -174,6 +178,9 @@
         <div class="left-side" id="main-navbar">
             <ul>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('histories.index') }}">Home</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ route('vehicles.create') }}">Add vehicle</a>
                 </li>
                 <li class="nav-item">
@@ -184,6 +191,7 @@
         <div class="right-side">
             <ul>
                 @auth
+                    <li>{{Auth::user()->is_premium ? "Premium account" : ""}}</li>
                     <form action="{{ route('logout') }}" method="post">
                         @csrf
                         <a class="nav-link" onclick="event.preventDefault(); this.closest('form').submit()"

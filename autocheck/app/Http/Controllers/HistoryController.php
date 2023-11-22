@@ -11,7 +11,7 @@ class HistoryController extends Controller
      */
     public function index()
     {
-        //
+        return view('autocheck.search');
     }
 
     /**
@@ -35,7 +35,7 @@ class HistoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        
     }
 
     /**
@@ -60,5 +60,9 @@ class HistoryController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function home(){
+        
     }
 }
