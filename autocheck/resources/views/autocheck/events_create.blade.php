@@ -26,22 +26,20 @@
                 {{ $message }}
             </div>
         @enderror
-        
-        <input type="text" placeholder="Vehicle1" name="vehicle1" id="vehicle1" />
-        @error('vehicle1')
-            <div class="error">
-                {{ $message }}
+
+        @foreach ($vehicles as $v)
+            <div>
+                <input type="checkbox" value="{{ $v->id }}" name="vehicles[]" id="vehicles" />
+                {{ $v->plate }}
             </div>
-        @enderror
-        
-        <input type="text" placeholder="Vehicle2" name="vehicle2" id="vehicle2" />
-        @error('vehicle2')
-            <div class="error">
-                {{ $message }}
-            </div>
-        @enderror
-        
+            @error('vehicle')
+                <div class="error">
+                    {{ $message }}
+                </div>
+            @enderror
+        @endforeach
+
         <button type="submit">Add event</button>
     </form>
-    
+
 @endsection

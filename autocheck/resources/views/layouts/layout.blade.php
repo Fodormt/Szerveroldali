@@ -70,7 +70,7 @@
             margin-right: 15px;
         }
 
-        .error{
+        .error {
             color: red;
         }
 
@@ -78,7 +78,7 @@
         .content {
             max-width: 800px;
             margin: 20px auto;
-            padding: 20px;
+            padding: 50px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -130,6 +130,8 @@
         form {
             display: flex;
             flex-direction: column;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         label {
@@ -138,11 +140,49 @@
         }
 
         input,
-        textarea {
+        textarea,
+        select {
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            border: none;
+            /* Remove border for file input */
+        }
+
+        /* Error message styles */
+        .error {
+            color: red;
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+
+        /* Button styles */
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* File input error message styles */
+        .invalid-feedback {
+            color: red;
+            font-size: 14px;
+            display: block;
+            margin-top: -10px;
+            margin-bottom: 15px;
         }
 
         /* Responsive styles */
@@ -180,18 +220,30 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('histories.index') }}">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('vehicles.create') }}">Add vehicle</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('events.create') }}">Add event</a>
-                </li>
+                @auth
+                    @if (Auth::user()->is_admin)
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('vehicles.index') }}">Vehicles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('events.index') }}">Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('vehicles.create') }}">Add vehicle</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('events.create') }}">Add event</a>
+                        </li>
+                    @endif
+                @endauth
+
+
             </ul>
         </div>
         <div class="right-side">
             <ul>
                 @auth
-                    <li>{{Auth::user()->is_premium ? "Premium account" : ""}}</li>
+                    {{-- <li>{{ Auth::user()->is_premium ? 'Premium account' : '' }}</li> --}}
                     <form action="{{ route('logout') }}" method="post">
                         @csrf
                         <a class="nav-link" onclick="event.preventDefault(); this.closest('form').submit()"
@@ -210,6 +262,9 @@
     </div>
     <div class="content">
         <h1>Vehicle damage history management system</h1>
+        @auth
+            <h3>Welcome {{ Auth::user()->name }}</h3>
+        @endauth
         <div>
             This Laravel-based system manages basic vehicle insurance information. Users can perform searches, view
             detailed event histories, access search logs, add new vehicles, edit existing vehicle details, and handle

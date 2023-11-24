@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +14,14 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        if (Auth::user() != null) {
+            if (Auth::user()->is_admin == true) {
+                return view('autocheck.events', ['events' => Event::all()]);
+            } else {
+                return response('Unauthorized.', 401);
+            }
+        }
+        return response('Unauthorized.', 401);
     }
 
     /**
@@ -21,7 +29,14 @@ class EventController extends Controller
      */
     public function create()
     {
-        return view('autocheck.events_create');
+        if (Auth::user() != null) {
+            if (Auth::user()->is_admin == true) {
+                return view('autocheck.events_create', ['vehicles' => Vehicle::all()]);
+            } else {
+                return response('Unauthorized.', 401);
+            }
+        }
+        return response('Unauthorized.', 401);
     }
 
     /**
@@ -31,23 +46,16 @@ class EventController extends Controller
     {
         $validated = $request->validate([
             'location' => 'required|string|max:100',
-            'time' => 'required|date_format:YYYY:MM:DD|min:0|max:3',
-            'description' => 'required|string|max:1000',
-            // 'vehicle1' => 'required|string|',
-            // 'vehicle2' => 'required|string|',
-            // regex:[a-zA-Z]{3}-?\d{3}
+            'time' => 'required|date_format:Y-m-d|before:today',
+            'description' => 'string|max:1000',
+            'vehicles' => 'required|array',
+            'vehicles.*' => 'integer|exists:vehicles,id'
         ]);
 
         $event = Event::create($validated);
-
-        $event->vehicles()->attach($validated['vehichle1']);
-        $event->vehicles()->attach($validated['vehichle2']);
-
-        // $event->comments()->create([
-        //     'text' => $validated['text'],
-        //     'user_id' => Auth::id(),
-        // ]);
-        return redirect()->route('events.show', ['id' => $event->id]);
+        $event->vehicles()->sync($request->vehicles);
+        return redirect()->route('events.index');
+        // return redirect()->route('events.show', ['id' => $event->id]);
     }
 
     /**

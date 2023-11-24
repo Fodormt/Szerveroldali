@@ -3,7 +3,7 @@
 @section('title', 'Add vehicle')
 
 @section('content')
-    <form method="post" action="{{ route('vehicles.store') }}">
+    <form method="post" action="{{ route('vehicles.store') }}" enctype="multipart/form-data">
         @csrf
         {{-- @method('patch') --}}
         <input type="text" placeholder="License plate" name="plate" id="plate" />
@@ -33,7 +33,7 @@
             </div>
         @enderror
         
-        <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file">
+        <input type="file" id="file" name="file">
         @error('file')
             <div class="invalid-feedback">
                 {{ $message }}

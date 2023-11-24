@@ -7,7 +7,7 @@
             <b>Plate:</b> {{ $vehicle->plate }}<br>
             <b>Brand:</b> {{ $vehicle->brand }}<br>
             <b>Type:</b> {{ $vehicle->type }}<br>
-            <b>Year:</b> {{ $vehicle->time }}<br>
+            <b>Year:</b> {{ $vehicle->year }}<br>
             <b>Filename:</b> {{ $vehicle->filename }}<br>
             <hr></div>
         </div>

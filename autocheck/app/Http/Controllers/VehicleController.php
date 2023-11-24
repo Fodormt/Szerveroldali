@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+
 
 class VehicleController extends Controller
 {
@@ -12,7 +15,14 @@ class VehicleController extends Controller
      */
     public function index()
     {
-        return view('autocheck.vehicles', ['vehicles' => Vehicle::all()]);
+        if (Auth::user() != null) {
+            if (Auth::user()->is_admin == true) {
+                return view('autocheck.vehicles', ['vehicles' => Vehicle::all()]);
+            } else {
+                return response('Unauthorized.', 401);
+            }
+        }
+        return response('Unauthorized.', 401);
     }
 
     /**
@@ -20,7 +30,14 @@ class VehicleController extends Controller
      */
     public function create()
     {
-        return view('autocheck.vehicles_create');
+        if (Auth::user() != null) {
+            if (Auth::user()->is_admin == true) {
+                return view('autocheck.vehicles_create');
+            }else {
+                return response('Unauthorized.', 401);
+            }
+        }
+        return response('Unauthorized.', 401);
     }
 
     /**
@@ -33,8 +50,17 @@ class VehicleController extends Controller
             'brand' => 'required|string',
             'type' => 'required|string',
             'year' => 'required|date_format:Y|before:today',
-            'file' => 'required|file',
+            'file' => 'sometimes|nullable|file',
         ]);
+
+        $validated['plate'] = Str::upper($validated['plate']);
+        if (!Str::contains($validated['plate'], '-')) {
+            $validated['plate'] = substr_replace($validated['plate'], '-', 3, 0);
+        }
+
+        $validated['filename'] = $validated['file']->getClientOriginalName();
+        $path = $request->file('file')->store();
+        $validated['filename_hash'] = $path;
 
         $vehicle = Vehicle::create($validated);
         return redirect() -> route('vehicles.index');
