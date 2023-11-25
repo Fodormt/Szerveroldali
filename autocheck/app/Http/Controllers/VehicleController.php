@@ -6,7 +6,7 @@ use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Validator;
 
 class VehicleController extends Controller
 {
@@ -33,7 +33,7 @@ class VehicleController extends Controller
         if (Auth::user() != null) {
             if (Auth::user()->is_admin == true) {
                 return view('autocheck.vehicles_create');
-            }else {
+            } else {
                 return response('Unauthorized.', 401);
             }
         }
@@ -45,25 +45,41 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request -> validate([
-            'plate' => 'required|string|regex:/^[a-zA-Z]{3}-?\d{3}/i|unique:vehicles,plate',
+
+        $validated0 = $request->validate([
+            'plate' => 'required|string|regex:/^[a-zA-Z]{3}-?\d{3}$/i',
             'brand' => 'required|string',
             'type' => 'required|string',
             'year' => 'required|date_format:Y|before:today',
             'file' => 'sometimes|nullable|file',
         ]);
 
-        $validated['plate'] = Str::upper($validated['plate']);
-        if (!Str::contains($validated['plate'], '-')) {
-            $validated['plate'] = substr_replace($validated['plate'], '-', 3, 0);
+        $converted_plate = Str::upper($validated0['plate']);
+
+        if (!Str::contains($converted_plate, '-')) {
+            $converted_plate = substr_replace($converted_plate, '-', 3, 0);
         }
 
-        $validated['filename'] = $validated['file']->getClientOriginalName();
+        // Modify the plate value
+        $validated0['plate'] = $converted_plate;
+
+        // Perform additional validation
+        $validated = Validator::make($validated0, [
+            'plate' => 'unique:vehicles,plate',
+        ]);
+
+        // Check if validation fails
+        if ($validated->fails()) {
+            // Handle validation failure
+            return redirect()->back()->withErrors($validated)->withInput();
+        }
+
+        $validated['filename'] = $request->validated('file')->getClientOriginalName();
         $path = $request->file('file')->store();
         $validated['filename_hash'] = $path;
 
         $vehicle = Vehicle::create($validated);
-        return redirect() -> route('vehicles.index');
+        return redirect()->route('vehicles.index');
     }
 
     /**

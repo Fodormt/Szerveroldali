@@ -11,7 +11,6 @@
                             <li>{{ $vehicle->plate }}</li>
                         @endforeach</ul>
                     <hr></div>
-                @endif
             @endforeach
             <hr></div>
         </div>

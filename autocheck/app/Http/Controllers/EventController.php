@@ -49,7 +49,7 @@ class EventController extends Controller
             'time' => 'required|date_format:Y-m-d|before:today',
             'description' => 'string|max:1000',
             'vehicles' => 'required|array',
-            'vehicles.*' => 'integer|exists:vehicles,id'
+            'vehicles.*' => 'integer|distinct|exists:vehicles,id'
         ]);
 
         $event = Event::create($validated);
@@ -63,8 +63,11 @@ class EventController extends Controller
      */
     public function show(string $id)
     {
-        $event = Event::find($id);
-        return view('autocheck.event', ['event' => $event]);
+        $events = Event::whereHas('vehicles', function ($query) use ($id) {
+            $query->where('vehicles.id', $id);
+        })->get();
+
+        return view('autocheck.search_results', ['events' => $events, 'id' => $id]);
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\History;
 use App\Models\Vehicle;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,12 +39,28 @@ class HistoryController extends Controller
      */
     public function store(Request $request)
     {
+        $request->merge(['plate' => Str::lower($request->input('plate'))]);
         $validated = $request->validate([
             'plate' => 'required|string|regex:/^[a-zA-Z]{3}-?\d{3}/i|unique:vehicles,plate',
         ]);
 
-        $history = History::create($validated);
-        return redirect()->route('histories.show');
+        $converted_plate = Str::upper($validated['plate']);
+        if (!Str::contains($converted_plate, '-')) {
+            $converted_plate = substr_replace($converted_plate, '-', 3, 0);
+        }
+
+        // Find the vehicle by plate
+        $vehicle = Vehicle::where('plate', $converted_plate)->first();
+
+        if ($vehicle) {
+            $vehicle_id = $vehicle->id;
+
+            // Redirect to the events.show route with the found vehicle's id
+            return redirect()->route('events.show', ['event' => $vehicle_id]);
+        } else {
+            // Handle the case where the vehicle is not found
+            return redirect()->back()->with('error', 'Vehicle not found');
+        }
     }
 
     /**
@@ -51,12 +68,7 @@ class HistoryController extends Controller
      */
     public function show(string $id)
     {
-        // Assuming $id is the vehicle ID
-        $events = Event::whereHas('vehicles', function ($query) use ($id) {
-            $query->where('vehicles.id', $id);
-        })->get();
-
-        return view('autocheck.search_results', ['events' => $events, 'id' => $id]);
+        //
     }
 
     /**
