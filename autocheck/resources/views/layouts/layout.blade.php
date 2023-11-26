@@ -185,6 +185,35 @@
             margin-bottom: 15px;
         }
 
+        .w-5 {
+            width: 20px;
+            height: 20px;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .pagination-item {
+            margin-right: 10px;
+        }
+
+        .pagination-link {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .pagination-link:hover {
+            text-decoration: underline;
+        }
+
+        .histories {
+            margin-bottom: 20px;
+        }
+
         /* Responsive styles */
         @media only screen and (max-width: 600px) {
             .navbar {

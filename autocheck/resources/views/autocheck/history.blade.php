@@ -5,9 +5,13 @@
 @section('content')
     @foreach ($histories as $history)
         <div class="histories">
-            <p>
+            <div>
+                <img src="" alt="">
                 <b>License plate:</b> {{ $history->plate }}
-                <b>User:</b> {{ $history->user->name }}
-            </p>
+                <b>time:</b> {{ $history->created_at }}
+                <a href="{{ route('histories.store', ['plate' => $history->plate]) }}">Search again</a>
+            </div>
     @endforeach
+    </div>
+    {{ $histories->onEachSide(10)->links() }}
 @endsection

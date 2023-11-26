@@ -31,6 +31,9 @@ Route::get('/dashboard', function () {
     return view('autocheck.search', ['events' => $events, 'user' => Auth::user()]);
 });
 
+Route::get('/histories/my_history', [HistoryController::class, 'my_history'])
+    ->name('histories.my_history');
+
 Route::resource('events', EventController::class);
 Route::resource('vehicles', VehicleController::class);
 Route::resource('histories', HistoryController::class);

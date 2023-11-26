@@ -45,7 +45,6 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
-
         $validated0 = $request->validate([
             'plate' => 'required|string|regex:/^[a-zA-Z]{3}-?\d{3}$/i',
             'brand' => 'required|string',
@@ -74,11 +73,11 @@ class VehicleController extends Controller
             return redirect()->back()->withErrors($validated)->withInput();
         }
 
-        $validated['filename'] = $request->validated('file')->getClientOriginalName();
+        $validated0['filename'] = $request->file('file')->getClientOriginalName();
         $path = $request->file('file')->store();
-        $validated['filename_hash'] = $path;
+        $validated0['filename_hash'] = $path;
 
-        $vehicle = Vehicle::create($validated);
+        $vehicle = Vehicle::create($validated0);
         return redirect()->route('vehicles.index');
     }
 

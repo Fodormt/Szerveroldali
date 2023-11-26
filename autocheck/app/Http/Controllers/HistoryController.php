@@ -16,7 +16,7 @@ class HistoryController extends Controller
      */
     public function index()
     {
-        return view('autocheck.search');
+        return view('autocheck.search', ['histories' => History::all()]);
     }
 
     /**
@@ -39,27 +39,33 @@ class HistoryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->merge(['plate' => Str::lower($request->input('plate'))]);
-        $validated = $request->validate([
-            'plate' => 'required|string|regex:/^[a-zA-Z]{3}-?\d{3}/i|unique:vehicles,plate',
-        ]);
+        if (Auth::user() != null) {
+            $request->merge(['plate' => Str::lower($request->input('plate'))]);
+            $validated = $request->validate([
+                'plate' => 'required|string|regex:/^[a-zA-Z]{3}-?\d{3}/i|unique:vehicles,plate',
+            ]);
 
-        $converted_plate = Str::upper($validated['plate']);
-        if (!Str::contains($converted_plate, '-')) {
-            $converted_plate = substr_replace($converted_plate, '-', 3, 0);
-        }
+            $converted_plate = Str::upper($validated['plate']);
+            if (!Str::contains($converted_plate, '-')) {
+                $converted_plate = substr_replace($converted_plate, '-', 3, 0);
+            }
 
-        // Find the vehicle by plate
-        $vehicle = Vehicle::where('plate', $converted_plate)->first();
+            // Find the vehicle by plate
+            $vehicle = Vehicle::where('plate', $converted_plate)->first();
 
-        if ($vehicle) {
-            $vehicle_id = $vehicle->id;
-
-            // Redirect to the events.show route with the found vehicle's id
-            return redirect()->route('events.show', ['event' => $vehicle_id]);
+            if ($vehicle) {
+                $vehicle_id = $vehicle->id;
+                History::create([
+                    'user_id' => Auth::user()->id,
+                    'plate' => $vehicle->plate,
+                ]);
+                return redirect()->route('events.show', ['event' => $vehicle_id]);
+            } else {
+                // Handle the case where the vehicle is not found
+                return redirect()->back()->with('error', 'Vehicle not found');
+            }
         } else {
-            // Handle the case where the vehicle is not found
-            return redirect()->back()->with('error', 'Vehicle not found');
+            return redirect()->route('login');
         }
     }
 
@@ -68,7 +74,7 @@ class HistoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('autocheck.search', ['histories' => History::all()]);
     }
 
     /**
@@ -95,7 +101,20 @@ class HistoryController extends Controller
         //
     }
 
-    public function home()
+    public function my_history()
     {
+        if (Auth::user() != null) {
+            $histories = History::where('user_id', Auth::user()->id)
+                ->orderByDesc('created_at')
+                ->paginate(10);
+
+            foreach ($histories as $history) {
+                $history->vehicle = Vehicle::where('plate', $history->plate)
+                    ->first();
+            }
+            return view('autocheck.history', ['histories' => $histories]);
+        } else {
+            return response('Unauthorized.', 401);
+        }
     }
 }

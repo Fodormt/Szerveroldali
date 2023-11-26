@@ -18,7 +18,7 @@ class HistoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'plate' => fake()->regexify('[a-zA-Z]{3}-?\d{3}'),
+            'plate' => fake()->regexify('[A-Z]{3}-\d{3}'),
         ];
     }
 }
