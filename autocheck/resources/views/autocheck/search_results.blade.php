@@ -19,8 +19,7 @@
         @if ($vehicle->filename === null)
             <img src="{{ Storage::url('images/' . 'default_car_image.jpg') }}" alt="Vehicle Image"><br>
         @else
-            <img src="{{ Storage::url('images/' . $vehicle->filename) }}" alt="Vehicle Image"><br>
-        @endif
+        <img src="{{ asset('storage/images/' . $vehicle->filename)  }}" alt="Vehicle Image"><br>        @endif
     </div>
     <br><br><br>
 
