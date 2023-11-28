@@ -6,6 +6,7 @@ use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class VehicleController extends Controller
@@ -50,7 +51,7 @@ class VehicleController extends Controller
             'brand' => 'required|string',
             'type' => 'required|string',
             'year' => 'required|date_format:Y|before:today',
-            'file' => 'sometimes|nullable|file',
+            'file' => 'sometimes|nullable|image',
         ]);
 
         $converted_plate = Str::upper($validated0['plate']);
@@ -73,9 +74,18 @@ class VehicleController extends Controller
             return redirect()->back()->withErrors($validated)->withInput();
         }
 
-        $validated0['filename'] = $request->file('file')->getClientOriginalName();
-        $path = $request->file('file')->store();
-        $validated0['filename_hash'] = $path;
+        if ($request->hasFile('file')) {
+            $file = $request -> file('file');
+            $fname = $file -> hashName();
+            Storage::disk('public')->put('images/'.$fname, $file->get());
+            $validated0['filename'] = $fname;
+            // $path = $request->file('file')->store();
+            // $validated0['filename_hash'] = $path;
+        }
+
+        //$validated0['filename'] = $request->file('file')->getClientOriginalName();
+        // $path = $request->file('file')->store();
+        // $validated0['filename_hash'] = $path;
 
         $vehicle = Vehicle::create($validated0);
         return redirect()->route('vehicles.index');

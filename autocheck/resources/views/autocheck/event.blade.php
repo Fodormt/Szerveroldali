@@ -1,5 +1,8 @@
 @extends('layouts.layout')
 
+@section('title', 'Event')
+
+
 @section('content')
         <div class="events">
             <div><b>Description:</b> {{ $event->description }}<br>

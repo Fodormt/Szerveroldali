@@ -130,8 +130,7 @@
         form {
             display: flex;
             flex-direction: column;
-            max-width: 400px;
-            margin: 0 auto;
+            max-width: 100%;
         }
 
         label {
@@ -186,8 +185,8 @@
         }
 
         .w-5 {
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
         }
 
         .pagination {
@@ -212,7 +211,138 @@
 
         .histories {
             margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
+        /* Styles for history details */
+        .history_details {
+            margin-bottom: 10px;
+            width: 50%;
+            float: left;
+        }
+
+        .container {
+            height: 100px;
+        }
+
+        /* Styles for the "Search again" link */
+        .history_details a {
+            color: #4CAF50;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        /* Vehicle styles */
+        .car_image {
+            margin-top: 10px;
+            width: 50%;
+            float: right;
+        }
+
+        /* Styles for car image */
+        .car_image img {
+            width: 100px;
+            height: auto;
+            float: right;
+            margin-left: 10px;
+        }
+
+        .vehicle_info {
+            width: 50%;
+            float: left;
+        }
+
+        /* Styles for the vehicles container */
+        .vehicles {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            height: 100px;
+            /* Clear the float */
+        }
+
+        /* Styles for vehicle details */
+        .vehicle_details {
+            float: left;
+            width: 50%;
+        }
+
+        .events {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styles for event details */
+        .events div {
+            margin-bottom: 10px;
+        }
+
+        /* List styles */
+        .events ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* List item styles */
+        .events li {
+            margin-left: 10px;
+        }
+
+        /* Horizontal rule styles */
+        .events hr {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border: 0;
+            border-top: 1px solid #ddd;
+        }
+
+
+
+        .events2 div {
+            margin-bottom: 10px;
+        }
+
+        .vehicle_info2 {
+            float: left;
+            width: 50%;
+            display: block;
+        }
+
+        .car_image2 {
+            float: right;
+            width: 50%;
+            display: block;
+        }
+
+        .car_image2 img {
+            width: 100px;
+            height: auto;
+            float: right;
+            margin-left: 10px;
+            display: block;
+        }
+
+        /* Additional styling for spacing */
+        .car_image2 {
+            margin-top: 10px;
+        }
+
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
 
         /* Responsive styles */
         @media only screen and (max-width: 600px) {
@@ -236,6 +366,17 @@
             .right-side li {
                 margin: 0;
                 margin-bottom: 10px;
+            }
+
+            .car_image img {
+                width: 100%;
+                /* Make the image fill the container */
+                float: none;
+                margin-left: 0;
+            }
+
+            .events {
+                padding: 10px;
             }
         }
     </style>

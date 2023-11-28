@@ -108,11 +108,7 @@ class HistoryController extends Controller
                 ->orderByDesc('created_at')
                 ->paginate(10);
 
-            foreach ($histories as $history) {
-                $history->vehicle = Vehicle::where('plate', $history->plate)
-                    ->first();
-            }
-            return view('autocheck.history', ['histories' => $histories]);
+            return view('autocheck.history', ['histories' => $histories, 'vehicles' => Vehicle::all()]);
         } else {
             return response('Unauthorized.', 401);
         }

@@ -11,7 +11,7 @@
     <form method="post" action="{{ route('histories.store') }}">
         @csrf
         {{-- @method('patch') --}}
-        <input type="text" placeholder="License plate" name="plate" id="plate" id="plate" value="{{ request('plate') ? request('plate') : '' }}"/>
+        <input type="text" placeholder="License plate" name="plate" id="plate" id="plate" value="{{ request('plate') ? request('plate') : old('plate', $history->plate ?? '') }}"/>
         @error('plate')
             <div class="error">
                 {{ $message }}

@@ -63,12 +63,14 @@ class EventController extends Controller
      */
     public function show(string $id)
     {
+        $vehicle = Vehicle::find($id);
         $events = Event::whereHas('vehicles', function ($query) use ($id) {
             $query->where('vehicles.id', $id);
-        })->get();
+        })->orderByDesc('time')->get();
 
-        return view('autocheck.search_results', ['events' => $events, 'id' => $id]);
+        return view('autocheck.search_results', ['events' => $events, 'id' => $id, 'vehicle' => $vehicle]);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -91,6 +93,28 @@ class EventController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (Auth::user() != null) {
+            if (Auth::user()->is_admin == true) {
+                $event = Event::find($id);
+                $event->delete();
+                return redirect()->route('events.index');
+            } else {
+                return response('Unauthorized.', 401);
+            }
+        }
+        return response('Unauthorized.', 401);
+    }
+
+    public function event_details(string $id)
+    {
+        if (Auth::user() != null) {
+            if (Auth::user()->is_premium == true) {
+                $event = Event::find($id);
+                return view('autocheck.event_details', ['event' => $event, 'vehicles' => Vehicle::all()]);
+            } else {
+                return response('Unauthorized. Premium users only.', 401);
+            }
+        }
+        return response('Unauthorized.', 401);
     }
 }

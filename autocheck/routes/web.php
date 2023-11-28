@@ -33,6 +33,8 @@ Route::get('/dashboard', function () {
 
 Route::get('/histories/my_history', [HistoryController::class, 'my_history'])
     ->name('histories.my_history');
+Route::get('/events/event_details/{id}', [EventController::class, 'event_details'])
+    ->name('events.event_details');
 
 Route::resource('events', EventController::class);
 Route::resource('vehicles', VehicleController::class);
