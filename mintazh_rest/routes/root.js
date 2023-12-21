@@ -154,7 +154,7 @@ module.exports = function (fastify, opts, next) {
     fastify.get(
         "/my-animals/with-place",
         {
-            onRequest: [fastify.auth],
+            onRequest: [fastify.auth], // hitelesítés
         },
         async (request, reply) => {
             const handler = await Handler.findByPk(request.user.id);
@@ -173,6 +173,135 @@ module.exports = function (fastify, opts, next) {
                 ],
             });
             reply.send(animals);
+        }
+    );
+
+    // POST /my-animals
+    fastify.post(
+        '/my-animals',
+        {
+            onRequest: [fastify.auth],
+            schema: {
+                body: {
+                    type: 'object',
+                    required: ['animals'],
+                    properties: {
+                        animals: { type: 'array' },
+                    }
+                }
+            }
+        },
+        async (request, reply) => {
+            const { animals } = request.body;
+
+            const handler = await Handler.findByPk(request.user.id);
+
+            const tmpReply = {
+                invalidAnimals: [],
+                alreadyMyAnimals: [],
+                adoptedAnimals: []
+            };
+
+            for (const animalId of animals) {
+                const animal = await Animal.findByPk(animalId);
+
+                if (!animal) {
+                    tmpReply.invalidAnimals.push(animalId);
+                } else if (await handler.hasAnimal(animalId)) {
+                    tmpReply.alreadyMyAnimals.push(animalId);
+                } else {
+                    await handler.addAnimal(animalId);
+                    tmpReply.adoptedAnimals.push(animalId);
+                }
+            }
+
+            reply.send(tmpReply);
+        }
+    );
+
+    // POST /clean-places
+    fastify.post(
+        '/clean-places',
+        {
+            onRequest: [fastify.auth],
+            schema: {
+                body: {
+                    type: 'object',
+                    required: ['places'],
+                    properties: {
+                        places: { type: 'array' },
+                    }
+                }
+            }
+        },
+        async (request, reply) => {
+            const { places } = request.body;
+
+            const handler = await Handler.findByPk(request.user.id);
+
+            if (handler.power < 100) {
+                return reply.status(StatusCodes.FORBIDDEN).send();
+            }
+
+            const tmpReply = {
+                invalidPlaces: [],
+                alreadyCleanPlaces: [],
+                cleanedPlaces: [],
+            };
+
+            for (const placeId of places) {
+                const place = await Place.findByPk(placeId);
+
+                if (!place) {
+                    tmpReply.invalidPlaces.push(placeId);
+                } else if (place.cleaned) {
+                    tmpReply.alreadyCleanPlaces.push(placeId);
+                } else {
+                    await place.update({ cleaned: true });
+                    tmpReply.cleanedPlaces.push(placeId);
+                }
+            }
+
+            reply.send(tmpReply);
+        }
+    );
+
+    // POST /move-animals
+    fastify.post(
+        '/move-animals',
+        {
+            onRequest: [fastify.auth],
+            schema: {
+                body: {
+                    type: 'array',
+                }
+            }
+        },
+        async (request, reply) => {
+            const handler = await Handler.findByPk(request.user.id);
+
+            if (handler.power < 100) {
+                return reply.status(StatusCodes.FORBIDDEN).send();
+            }
+
+            const tmpReply = request.body;
+            for (const item of tmpReply) {
+                const animal = await Animal.findByPk(item.AnimalId || -1);
+                const place = await Place.findByPk(item.PlaceId || -1);
+
+                if(animal && place) {
+                    if(await place.countAnimals() < place.capacity /*&& !await place.hasAnimal(animal.id)*/) {
+                        item.success = true;
+                        await animal.setPlace(place);
+                    } else {
+                        item.success = false;
+                    }
+                } else {
+                    item.success = false;
+                }
+            }
+
+            reply.send(tmpReply);
         }
     );
 
